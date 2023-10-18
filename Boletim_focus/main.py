@@ -1,16 +1,11 @@
 import Functions as f 
-import requests
-import datetime
-url_do_pdf = rf"https://www.bcb.gov.br/content/focus/focus/R20231013.pdf"
 
-# Envie uma solicitação HTTP para a URL do PDF
-response = requests.get(url_do_pdf)
+# resultado = f.abrir_site_e_buscar_data_publicacao_Recente()
+# dia_hoje=f.Dia_de_hoje()
 
-# Verifique se a solicitação foi bem-sucedida (código de resposta 200)
-if response.status_code == 200:
-# Abra um arquivo local em modo de gravação binária (modo 'wb') para salvar o PDF
-    with open(rf'D:\GIT\Boletim_focus\Download\{datetime.date.today()}.pdf', 'wb') as file:
-        file.write(response.content)
-    print('PDF baixado com sucesso.')
-else:
-    print('Falha ao baixar o PDF. Código de resposta:', response.status_code)
+# if rf'Data de publicação: {dia_hoje}'  in resultado:
+#     print('Boletim Saiu hoje')
+#     f.Baixar_arquivo(f.D_3(dia_hoje))
+
+
+################################################################### Criar Historico #########################################################
