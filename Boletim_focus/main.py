@@ -9,7 +9,7 @@ response = requests.get(url_do_pdf)
 # Verifique se a solicitação foi bem-sucedida (código de resposta 200)
 if response.status_code == 200:
 # Abra um arquivo local em modo de gravação binária (modo 'wb') para salvar o PDF
-    with open(f'Download\\{datetime.date.today()}.pdf', 'wb') as file:
+    with open(rf'D:\GIT\Boletim_focus\Download\{datetime.date.today()}.pdf', 'wb') as file:
         file.write(response.content)
     print('PDF baixado com sucesso.')
 else:
