@@ -1,1 +1,0 @@
-print("fala comigo negafa")
