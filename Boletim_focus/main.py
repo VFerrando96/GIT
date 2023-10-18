@@ -1,12 +1,16 @@
 import Functions as f 
 import requests
+import datetime
+url_do_pdf = rf"https://www.bcb.gov.br/content/focus/focus/R20231013.pdf"
 
-resultado = f.abrir_site_e_buscar_data_publicacao()
-dia_hoje=f.Dia_de_hoje()
+# Envie uma solicitação HTTP para a URL do PDF
+response = requests.get(url_do_pdf)
 
-if rf'Data de publicação: 16/10/2023'  not in resultado:
-    print('Boletim Saiu hoje')
-    url_pdf=r"https://www.bcb.gov.br/content/focus/focus/R20231013.pdf"
-    response = requests.get(url_pdf)
-    if response.status_code == 200:
-        print()
+# Verifique se a solicitação foi bem-sucedida (código de resposta 200)
+if response.status_code == 200:
+# Abra um arquivo local em modo de gravação binária (modo 'wb') para salvar o PDF
+    with open(f'Download\\{datetime.date.today()}.pdf', 'wb') as file:
+        file.write(response.content)
+    print('PDF baixado com sucesso.')
+else:
+    print('Falha ao baixar o PDF. Código de resposta:', response.status_code)
