@@ -4,4 +4,11 @@ import investpy as inv
 
 br= inv.stocks.get_stocks(country='brazil')
 
-print(br)
+carteira=[]
+for a in br['symbol']:
+    if len(a) <= 5:
+        carteira.append(a+'.SA')
+
+
+dt= yf.download(carteira,start='2002-01-01',end='2022-01-01')['Adj Close']
+print(dt)
