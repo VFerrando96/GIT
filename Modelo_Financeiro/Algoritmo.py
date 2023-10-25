@@ -2,64 +2,66 @@
 import pandas as pd
 import quantstats as qs
 import matplotlib.pyplot as plt
-dados = pd.read_csv('Modelo_Financeiro/dados_empresas (1).csv')
+import monthly_returns_heatmap as mrh
+dados = pd.read_csv('Modelo_Financeiro/dados_empresas (1) (1).csv')
 dados=dados[dados['volume_negociado']>1000000]
-# print(dados)
+
 #####################################################################   
 #                       Calculo Retorno Mensal                      #
 #####################################################################  
 dados['retorno'] = dados.groupby('ticker')['preco_fechamento_ajustado'].pct_change()
 dados['retorno'] = dados.groupby('ticker')['retorno'].shift(-1)
 
-#####################################################################   
-#                       Ranking EBIT e ROIC                           
-#####################################################################  
+# #####################################################################   
+# #                       Ranking EBIT e ROIC                           
+# #####################################################################  
 
 dados['ranking_ebit_ev'] = dados.groupby('data')['ebit_ev'].rank(ascending = False)
 dados['ranking_roic'] = dados.groupby('data')['roic'].rank(ascending = False)
 
 
-#####################################################################   
-#                       soma dos ranks                          
-#####################################################################  
+# #####################################################################   
+# #                       soma dos ranks                          
+# #####################################################################  
 dados['ranking_final'] = dados['ranking_ebit_ev'] + dados['ranking_roic']
 dados['ranking_final'] = dados.groupby('data')['ranking_final'].rank()
 
-#####################################################################   
-#                       Criando as carteiras                          
-#####################################################################  
+# #####################################################################   
+# #                       Criando as carteiras                          
+# #####################################################################  
 dados = dados[dados['ranking_final'] <= 10]
 
-#####################################################################   
-#                       rentabildiade por carteiras                          
-##################################################################### 
+
+# #####################################################################   
+# #                       rentabildiade por carteiras                          
+# ##################################################################### 
 rentabilidade_por_carteiras = dados.groupby('data')['retorno'].mean()
 rentabilidade_por_carteiras = rentabilidade_por_carteiras.to_frame()
-#####################################################################   
-#                       rentabildiade do modelo                        
-##################################################################### 
+
+# #####################################################################   
+# #                       rentabildiade do modelo                        
+# ##################################################################### 
 rentabilidade_por_carteiras['modelo'] = (1 + rentabilidade_por_carteiras['retorno']).cumprod() - 1 
 
 rentabilidade_por_carteiras = rentabilidade_por_carteiras.shift(1)
 rentabilidade_por_carteiras = rentabilidade_por_carteiras.dropna()
-#####################################################################   
-#                       retorno ibov                       
-##################################################################### 
-ibov = pd.read_csv('Modelo_Financeiro/ibov (1).csv')
+
+# #####################################################################   
+# #                       retorno ibov                       
+# ##################################################################### 
+ibov = pd.read_csv('Modelo_Financeiro/ibov (1) (1).csv.csv')
 
 retornos_ibov = ibov['fechamento'].pct_change().dropna()
 retornos_ibov_acum = (1 + retornos_ibov).cumprod() - 1 
 rentabilidade_por_carteiras['ibovespa'] = retornos_ibov_acum.values
 
-
-#####################################################################   
-#                       grafico                       
-##################################################################### 
-
-rentabilidade_por_carteiras = rentabilidade_por_carteiras.drop('retorno', axis = 1)
+print(rentabilidade_por_carteiras)
+# #####################################################################   
+# #                       grafico                       
+# ##################################################################### 
 qs.extend_pandas()
-rentabilidade_por_carteiras.index = pd.to_datetime(rentabilidade_por_carteiras.index)
 
-rentabilidade_por_carteiras['modelo'].plot_monthly_heatmap()
-rentabilidade_ao_ano = (1 + rentabilidade_por_carteiras.loc['2023-06-30', 'modelo']) ** (1/10.66) - 1
-print(rentabilidade_ao_ano)
+rentabilidade_por_carteiras.index = pd.to_datetime(rentabilidade_por_carteiras.index)
+qs.plots.monthly_heatmap(rentabilidade_por_carteiras['modelo'])
+
+# rentabilidade_por_carteiras.plot()
