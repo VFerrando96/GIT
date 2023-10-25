@@ -1,6 +1,7 @@
 import yfinance as yf
 import yfinance as yf
+import investpy as inv
 
-msft = yf.Ticker("PETR4.SA")
+br= inv.stocks.get_stocks(country='brazil')
 
-print(msft.dividends)
+print(br)
