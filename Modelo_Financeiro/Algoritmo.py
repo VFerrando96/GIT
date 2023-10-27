@@ -63,5 +63,6 @@ print(rentabilidade_por_carteiras)
 # ##################################################################### 
 qs.extend_pandas()
 rentabilidade_por_carteiras.index = pd.to_datetime(rentabilidade_por_carteiras.index)
-rentabilidade_por_carteiras['modelo'].plot_monthly_heatmap()
-rentabilidade_por_carteiras['ibovespa'].plot_monthly_heatmap()
+print(rentabilidade_por_carteiras)
+# rentabilidade_por_carteiras['modelo'].plot_monthly_heatmap()
+# rentabilidade_por_carteiras['ibovespa'].plot_monthly_heatmap()

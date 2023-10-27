@@ -1,14 +1,9 @@
 import yfinance as yf
 import yfinance as yf
 import investpy as inv
+import pandas as pd
 
-br= inv.stocks.get_stocks(country='brazil')
+vale = yf.Ticker("VALE3.SA")
 
-carteira=[]
-for a in br['symbol']:
-    if len(a) <= 5:
-        carteira.append(a+'.SA')
+print(vale.get_financials(freq='quarterly'))
 
-
-dt= yf.download(carteira,start='2002-01-01',end='2022-01-01')['Adj Close']
-print(dt)
