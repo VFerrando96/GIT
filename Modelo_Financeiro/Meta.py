@@ -4,7 +4,9 @@ from webdriver_manager.chrome import ChromeDriverManager
 import pandas as pd
 from io import StringIO
 import MetaTrader5 as mt5
+import pulp
 driver = webdriver.Chrome()
+soma=0.0
 
 driver.get('https://www.fundamentus.com.br/resultado.php')
 local_tabela = '/html/body/div[1]/div[2]/table'
@@ -26,23 +28,58 @@ tabela['ranking_final'] = tabela['ranking_ev_ebit'] + tabela['ranking_roic']
 tabela = tabela.sort_values('ranking_final')
 tabela=tabela.head(10)
 tickers=tabela.index
-#tickers_com_f = [ticker + 'F' for ticker in tickers]
-print(tickers)
-#######################################################################################################################################################################################
-#   Iniciando o Meta Trader 5                                                                                                                                                         #  
-#######################################################################################################################################################################################
-# mt5.initialize(login=53477444, server="XPMT5-DEMO",password="899513Vi!")
-# # shut down connection to the MetaTrader 5 terminal
+tickers_com_f = [ticker + 'F' for ticker in tickers]
 
+#######################################################################################################################################################################################
+#   Iniciando o Meta Trader 5                                                                                                                                                      #  
+#######################################################################################################################################################################################
+mt5.initialize(login=53477444, server="XPMT5-DEMO",password="899513Vi!")
+# shut down connection to the MetaTrader 5 terminal
+#######################################################################################################################################################################################
+#   valor mínimo a ser usado para a compra das ações                                                                                                                                                    #  
+######################################################################################################################################################################################
+valor_disponivel = 320
+problema = pulp.LpProblem("Selecao_de_Acoes", pulp.LpMaximize)
+compra_acoes = []
+preco_acoes = []
+for acao in tickers_com_f:
+    compra_acoes.append(pulp.LpVariable(f"Compra_{acao}", lowBound=0, upBound=None, cat=pulp.LpInteger))
+    preco_acoes.append(mt5.symbol_info(acao).ask)
+problema += pulp.lpSum(preco_acoes[i] * compra_acoes[i] for i in range(10))
+
+# Restrição: gastar no máximo o valor disponível
+problema += pulp.lpSum(preco_acoes[i] * compra_acoes[i] for i in range(10)) <= valor_disponivel
+
+# Restrição: comprar pelo menos uma ação de cada ticker
+for i in range(10):
+    problema += compra_acoes[i] >= 1
+
+# Resolva o problema
+problema.solve()
+
+# Mostrar os resultados
+if pulp.LpStatus[problema.status] == "Optimal":
+    valor_gasto = sum(compra_acoes[i].varValue * preco_acoes[i] for i in range(10))
+    print(f"Valor máximo gasto em ações: ${valor_gasto}")
+    print("Carteira otimizada:")
+    for i, acao in enumerate(tickers):
+        quantidade_comprada = compra_acoes[i].varValue
+        if quantidade_comprada > 0:
+            print(f"Comprar {quantidade_comprada} ações de {acao} a ${preco_acoes[i]} cada.")
+else:
+    print("Não foi possível encontrar uma solução viável.")
+#######################################################################################################################################################################################
+#   Comprar as ações                                                                                                                                                                  #  
+######################################################################################################################################################################################
 # for acao in tickers:
 #     mt5.symbol_select(acao)
 #     preco=mt5.symbol_info(acao).ask
-#     quantidade=1.0
+#     quantidade=100.0
 #     ordem_compra = {
 #             "action": mt5.TRADE_ACTION_DEAL,
 #             "symbol": acao,
 #             "volume": quantidade,
-#             "type": mt5.ORDER_TYPE_BUY,
+#             "type": mt5.ORDER_TYPE_SELL,
 #             "price": preco,
 #             "magic": 1,
 #             "comment": "Trades hackeando a bolsa",
