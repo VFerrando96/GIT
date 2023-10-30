@@ -26,26 +26,28 @@ tabela['ranking_final'] = tabela['ranking_ev_ebit'] + tabela['ranking_roic']
 tabela = tabela.sort_values('ranking_final')
 tabela=tabela.head(10)
 tickers=tabela.index
+#tickers_com_f = [ticker + 'F' for ticker in tickers]
+print(tickers)
 #######################################################################################################################################################################################
 #   Iniciando o Meta Trader 5                                                                                                                                                         #  
 #######################################################################################################################################################################################
-mt5.initialize(login=53477444, server="XPMT5-DEMO",password="899513Vi!")
-# shut down connection to the MetaTrader 5 terminal
+# mt5.initialize(login=53477444, server="XPMT5-DEMO",password="899513Vi!")
+# # shut down connection to the MetaTrader 5 terminal
 
-for acao in tickers:
-    mt5.symbol_select(acao)
-    preco=mt5.symbol_info(acao).ask
-    quantidade=1.0
-    ordem_compra = {
-            "action": mt5.TRADE_ACTION_DEAL,
-            "symbol": acao,
-            "volume": quantidade,
-            "type": mt5.ORDER_TYPE_BUY,
-            "price": preco,
-            "magic": 1,
-            "comment": "Trades hackeando a bolsa",
-            "type_time": mt5.ORDER_TIME_DAY,
-            "type_filling": mt5.ORDER_FILLING_RETURN,
-    }
-    compra = mt5.order_send(ordem_compra)
-    print(compra)
+# for acao in tickers:
+#     mt5.symbol_select(acao)
+#     preco=mt5.symbol_info(acao).ask
+#     quantidade=1.0
+#     ordem_compra = {
+#             "action": mt5.TRADE_ACTION_DEAL,
+#             "symbol": acao,
+#             "volume": quantidade,
+#             "type": mt5.ORDER_TYPE_BUY,
+#             "price": preco,
+#             "magic": 1,
+#             "comment": "Trades hackeando a bolsa",
+#             "type_time": mt5.ORDER_TIME_DAY,
+#             "type_filling": mt5.ORDER_FILLING_RETURN,
+#     }
+#     compra = mt5.order_send(ordem_compra)
+#     print(compra)
