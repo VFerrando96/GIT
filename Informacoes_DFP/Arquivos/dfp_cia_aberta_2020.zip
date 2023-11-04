@@ -1,0 +1,22 @@
+<html>
+<head>
+	<title>Erro 404 - Portal Dados Abertos CVM</title>
+    <link href="http://dados.cvm.gov.br/webassets/base/eddf841d_green.css" rel="stylesheet"/>
+	<style>
+		section.featured.media-overlay.hidden-xs {display: none;}
+		div.box.stats {display: none;}
+		div.col-md-6.col2 {width: 100%;}
+	</style>
+</head>
+<body>
+<header class="navbar navbar-static-top masthead">
+<h1><a href="/">Portal Dados Abertos CVM</a></h1>
+</header>
+<div class="row wrapper no-nav">
+<div class="module-content">
+<h1>404 Not Found</h1>
+<p>N&#227;o encontrado</p>
+</div>
+</div>
+</body>
+</html>
