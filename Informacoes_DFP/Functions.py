@@ -31,3 +31,5 @@ def Descompactar_arquivo_ano(ano):
     arquivo=f"{atual}/informacoes_DFP/Arquivos/"+ f"dfp_cia_aberta_{ano}.zip"
     if os.path.exists(arquivo):
         print("existe",arquivo)
+    else:
+        print("Não existe arquivo para essa data")
