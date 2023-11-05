@@ -21,5 +21,9 @@ def Descompactar_arquivos_completo_zip():
                 demonstracao = pd.read_csv(arquivo_zip.open(planilha), sep=';', encoding='ISO-8859-1', dtype={"ORDEM_EXERC": "category"})
                 lista_demostracoes_2010_2022.append(demonstracao)
     base_dados = pd.concat(lista_demostracoes_2010_2022)
-    base_dados.to_csv(f"{atual}/informacoes_DFP/Base/Base_dados_completa.csv",sep=';')
+    base_dados[['con_ind','tipo_dem']] = base_dados['GRUPO_DFP'].str.split("-",expand=True)
+    base_dados['con_ind']=base_dados['con_ind'].str.strip()
+    base_dados['tipo_dem']=base_dados['tipo_dem'].str.strip()
+    base_dados = base_dados[base_dados['ORDEM_EXERC'] != 'PENÚLTIMO']
+    base_dados.to_csv(f"{atual}/informacoes_DFP/Base/Base_dados_completa",sep=';')
 
