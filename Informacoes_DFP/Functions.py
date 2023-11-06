@@ -44,3 +44,22 @@ def Descompactar_arquivo_ano(ano):
         base_dados.to_csv(f"{atual}/informacoes_DFP/Base/Base_dados_{ano}.csv",sep=';')
     else:
         print("Não existe arquivo para essa data")
+
+def Descompactar_DRE_ano(ano,cnpj):
+    demonstracao_ano=[]
+    pasta = f"{atual}/informacoes_DFP/Arquivos"
+    arquivo=f"{atual}/informacoes_DFP/Arquivos/"+ f"dfp_cia_aberta_{ano}.zip"
+    if os.path.exists(arquivo):
+        arquivo_zip = zipfile.ZipFile(os.path.join(pasta, arquivo))
+        for planilha in arquivo_zip.namelist():
+            demonstracao = pd.read_csv(arquivo_zip.open(planilha), sep=';', encoding='ISO-8859-1', dtype={"ORDEM_EXERC": "category"})
+            demonstracao_ano.append(demonstracao)
+            base_dados = pd.concat(demonstracao_ano)
+        base_dados[['con_ind','tipo_dem']] = base_dados['GRUPO_DFP'].str.split("-",expand=True)
+        base_dados['con_ind']=base_dados['con_ind'].str.strip()
+        base_dados['tipo_dem']=base_dados['tipo_dem'].str.strip()
+        base_dados = base_dados[base_dados['ORDEM_EXERC'] != 'PENÚLTIMO']
+        base_dados=base_dados[base_dados['CNPJ_CIA'] == f'{cnpj}']
+        base_dados.to_csv(f"{atual}/informacoes_DFP/Base/DRE_{ano}.csv",sep=';')
+    else:
+        print("Não existe arquivo para essa data")
