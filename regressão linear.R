@@ -37,4 +37,15 @@ resid(mod1)
 shapiro.test(resid(mod1))
 """ ao nivel de significancia alpha de 0.05 e tamanho amostral n=13, não há evidencia para rejeitar a hipotese nula; ou seja, 
 os residuos segue a distribuição normal.
+
+
+Homocedasticidade == variancia dos residuos= constante
+
+heterocedasticidade == variancia não constantes
+
+teste de breusch-pagan cedasticidade dos residuos
+
 """
+
+library(lmtest)
+bptest(mod1)
