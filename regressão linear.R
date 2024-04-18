@@ -51,16 +51,14 @@ library(lmtest)
 bptest(mod1)
 
 
+yhat=predict(mod1)
+ei=resid(mod1)
+ei=ei**2
 
-Pressuposto homocedasticidade 
-a variancia dos residuos ordinários ei é constante 
-var(ei)=constante
-h0; dp(ei)² é constante 
-h1=c.c
-alpha=0.05
-
+summary(lm(ei~yhat))$r.squared
+cor(ei,yhat)**2
 
 
+novox = data.frame(x1=c(5,6))
 
-
-
+predict(mod1,newdata=novox,level=0.05,interval = "prediction")
