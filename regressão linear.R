@@ -49,3 +49,18 @@ teste de breusch-pagan cedasticidade dos residuos
 
 library(lmtest)
 bptest(mod1)
+
+
+
+Pressuposto homocedasticidade 
+a variancia dos residuos ordinários ei é constante 
+var(ei)=constante
+h0; dp(ei)² é constante 
+h1=c.c
+alpha=0.05
+
+
+
+
+
+
